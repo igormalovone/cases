@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Игорь Малов — позиционирование продуктов</title>
+<style>
+  :root {
+    --ground: #F6F7F9; --panel: #FFFFFF; --ink: #1B1F26; --ink-soft: #4A525E;
+    --dim: #78818F; --rule: #DDE2E8; --rule-soft: #EBEEF2;
+    --blue: #2F5D8C; --blue-soft: #E8EEF5;
+    --good: #2E6B4F; --good-soft: #E6F0EA;
+    --display: "Avenir Next", "Futura", "Trebuchet MS", sans-serif;
+    --body: "Charter", "Iowan Old Style", Georgia, serif;
+    --mono: "Menlo", ui-monospace, "SF Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+      --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+      --blue: #7FA9D6; --blue-soft: #1E2A36;
+      --good: #7FC0A0; --good-soft: #1C2A24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+    --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+    --blue: #7FA9D6; --blue-soft: #1E2A36;
+    --good: #7FC0A0; --good-soft: #1C2A24;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--body);
+    font-size: 18.5px; line-height: 1.65; margin: 0; padding: 0 20px 96px; }
+  .wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 52px; }
+  header { padding-top: 72px; display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow { font-family: var(--display); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dim); font-weight: 600; }
+  h1 { font-family: var(--display); font-size: clamp(30px, 5.4vw, 44px); line-height: 1.12;
+    font-weight: 600; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .lede { font-size: 19px; color: var(--ink-soft); margin: 0; max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--mono);
+    font-size: 12px; color: var(--dim); border-top: 1px solid var(--rule); padding-top: 16px; }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+  section { display: flex; flex-direction: column; gap: 22px; }
+  h2 { font-family: var(--display); font-size: 13px; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 600; color: var(--blue); margin: 0;
+    padding-bottom: 10px; border-bottom: 2px solid var(--blue); }
+  p { margin: 0; max-width: 66ch; }
+
+  .cards { display: flex; flex-direction: column; gap: 18px; }
+  a.card { display: flex; flex-direction: column; gap: 12px; background: var(--panel);
+    border: 1px solid var(--rule); padding: 26px 28px; text-decoration: none;
+    color: inherit; transition: border-color .15s ease, transform .15s ease; }
+  a.card:hover { border-color: var(--blue); transform: translateY(-1px); }
+  .card-tag { font-family: var(--mono); font-size: 11.5px; color: var(--dim);
+    letter-spacing: 0.04em; }
+  .card-title { font-family: var(--display); font-size: 23px; font-weight: 600;
+    line-height: 1.2; letter-spacing: -0.01em; }
+  .card-desc { font-size: 16.5px; color: var(--ink-soft); line-height: 1.55; max-width: 62ch; }
+  .card-res { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+  .chip { font-family: var(--mono); font-size: 12px; background: var(--good-soft);
+    color: var(--good); padding: 4px 10px; border: 1px solid transparent; }
+  .chip.n { background: var(--blue-soft); color: var(--blue); }
+  .card-go { font-family: var(--display); font-size: 13px; color: var(--blue);
+    font-weight: 600; letter-spacing: 0.02em; }
+
+  .how { background: var(--panel); border: 1px solid var(--rule); padding: 26px 28px;
+    display: flex; flex-direction: column; gap: 14px; }
+  .how ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 9px; }
+  .how li { font-size: 16.5px; color: var(--ink-soft); }
+  .how li b { color: var(--ink); font-weight: 600; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 22px; display: flex;
+    flex-direction: column; gap: 8px; font-size: 16.5px; color: var(--ink-soft); }
+  footer a { color: var(--blue); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Портфолио</div>
+  <h1>Игорь Малов<br>Позиционирование продуктов</h1>
+  <p class="lede">Разбираюсь, чем продукт на самом деле отличается от конкурентов,
+  и строю вокруг этого отличия всё остальное: кому его продавать, за что человек
+  платит и какими словами об этом говорить. Ниже — разборы проектов целиком,
+  от исходной проблемы до результата.</p>
+  <div class="meta">
+    <span><b>Санкт-Петербург</b>, готов к переезду в Москву</span>
+    <span>Проекты через <b>«ФранчБрокер»</b></span>
+    <span>С <b>2023</b> года</span>
+  </div>
+</header>
+
+<section>
+  <h2>Разборы проектов</h2>
+  <div class="cards">
+
+    <a class="card" href="balybar.html">
+      <div class="card-tag">Общепит → вендинг · сеть напитков</div>
+      <div class="card-title">BALY BAR</div>
+      <div class="card-desc">Франшиза была упакована, но не продавалась: на рынке
+      десятки почти одинаковых предложений. Напиток готовили прямо на точке, поэтому
+      качество зависело от конкретного сотрудника, а сеть плохо тиражировалась.
+      Производство вынесли отдельно, точкой продаж стал автомат — отличие переехало
+      из работы персонала в сам продукт.</div>
+      <div class="card-res">
+        <span class="chip n">149 точек за 3 года</span>
+        <span class="chip">рентабельность 41% при 25% по отрасли</span>
+        <span class="chip">окупаемость 4 месяца</span>
+      </div>
+      <div class="card-go">Открыть разбор →</div>
+    </a>
+
+    <a class="card" href="indigo.html">
+      <div class="card-tag">Частное образование · детский центр</div>
+      <div class="card-title">Индиго</div>
+      <div class="card-desc">Центр ничем не отличался от тысяч похожих. Всё держалось
+      на квалификации педагога: такого человека долго искать и ещё дольше готовить,
+      значит расти невозможно. Авторскую методику встроили в систему на базе ИИ —
+      диагностика ученика, своя траектория, подача материала. Вести занятие теперь
+      может педагог без многолетней подготовки.</div>
+      <div class="card-res">
+        <span class="chip n">персональное обучение по цене групповых занятий</span>
+      </div>
+      <div class="card-go">Открыть разбор →</div>
+    </a>
+
+    <a class="card" href="ochei.html">
+      <div class="card-tag">Услуги · сеть студий фотосъёмки радужки глаза</div>
+      <div class="card-title">OCHEI CHARM</div>
+      <div class="card-desc">Ниша перестала быть пустой: семь игроков делают одно и
+      то же — снимают радужку и печатают снимок. Экономика точки при этом хорошая,
+      но покупателю франшизы не за что зацепиться, и он выбирает по цене. Настоящее
+      ограничение оказалось глубже: всё, из чего состоит такая франшиза, можно
+      получить и без неё — оборудование продаётся свободно, обучение занимает неделю.
+      У сети была наработка по разбору радужки, лежавшая как побочная возможность.
+      Предложил сделать её ядром: отдельный сервис на ИИ, куда партнёр загружает
+      снимок и получает готовый разбор для клиента.</div>
+      <div class="card-res">
+        <span class="chip n">продаём не картинку, а то, что человек узнаёт о себе</span>
+        <span class="chip">такого нет ни у одного из семи конкурентов</span>
+      </div>
+      <div class="card-go">Открыть разбор →</div>
+    </a>
+
+  </div>
+</section>
+
+<section>
+  <h2>Как устроена работа</h2>
+  <div class="how">
+    <p>Метод один и тот же независимо от рынка. Подробное описание — на отдельной
+    странице.</p>
+    <ol>
+      <li><b>Разобрать нишу целиком.</b> Не только чем компании отличаются друг от
+      друга, но и что мешает всей категории сразу.</li>
+      <li><b>Поговорить с людьми.</b> Глубинные интервью с собственником и с
+      покупателями: за какой работой человек на самом деле приходит к продукту.</li>
+      <li><b>Найти отличие, которое уже есть.</b> Обычно оно в компании присутствует,
+      но не стоит в центре предложения.</li>
+      <li><b>Проверить на тиражируемость.</b> Можно ли повторить это в другом городе
+      без потери качества.</li>
+      <li><b>Собрать позиционирование и материалы</b> — и отдельно определить, что
+      нужно поменять в самом продукте, чтобы обещание было правдой.</li>
+    </ol>
+    <div class="card-go"><a href="predlozhenie.html" style="color:var(--blue);text-decoration:none">Подробно о методике →</a></div>
+  </div>
+</section>
+
+<footer>
+  <div>Игорь Малов · продуктовый маркетолог</div>
+  <div>+7 (995) 947-83-77 · <a href="mailto:workmalov@gmail.com">workmalov@gmail.com</a></div>
+</footer>
+
+</div>
+</body>
+</html>
