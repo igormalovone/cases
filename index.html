@@ -63,6 +63,10 @@
   .chip.n { background: var(--blue-soft); color: var(--blue); }
   .card-go { font-family: var(--display); font-size: 13px; color: var(--blue);
     font-weight: 600; letter-spacing: 0.02em; }
+  .card-static { cursor: default; opacity: 0.72; }
+  .card-static:hover { border-color: var(--rule); transform: none; }
+  .card-soon { font-family: var(--mono); font-size: 11.5px; color: var(--dim);
+    letter-spacing: 0.03em; margin-top: -6px; }
 
   .how { background: var(--panel); border: 1px solid var(--rule); padding: 26px 28px;
     display: flex; flex-direction: column; gap: 14px; }
@@ -112,19 +116,7 @@
       <div class="card-go">Открыть разбор →</div>
     </a>
 
-    <a class="card" href="indigo.html">
-      <div class="card-tag">Частное образование · детский центр</div>
-      <div class="card-title">Индиго</div>
-      <div class="card-desc">Центр ничем не отличался от тысяч похожих. Всё держалось
-      на квалификации педагога: такого человека долго искать и ещё дольше готовить,
-      значит расти невозможно. Авторскую методику встроили в систему на базе ИИ —
-      диагностика ученика, своя траектория, подача материала. Вести занятие теперь
-      может педагог без многолетней подготовки.</div>
-      <div class="card-res">
-        <span class="chip n">персональное обучение по цене групповых занятий</span>
-      </div>
-      <div class="card-go">Открыть разбор →</div>
-    </a>
+    
 
     <a class="card" href="ochei.html">
       <div class="card-tag">Услуги · сеть студий фотосъёмки радужки глаза</div>
@@ -144,29 +136,24 @@
       <div class="card-go">Открыть разбор →</div>
     </a>
 
+<div class="card card-static">
+      <div class="card-tag">Частное образование · детский центр</div>
+      <div class="card-title">Индиго</div>
+      <div class="card-soon">Разбор готовится</div>
+      <div class="card-desc">Центр ничем не отличался от тысяч похожих. Всё держалось
+      на квалификации педагога: такого человека долго искать и ещё дольше готовить,
+      значит расти невозможно. Авторскую методику встроили в систему на базе ИИ —
+      диагностика ученика, своя траектория, подача материала. Вести занятие теперь
+      может педагог без многолетней подготовки.</div>
+      <div class="card-res">
+        <span class="chip n">персональное обучение по цене групповых занятий</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<section>
-  <h2>Как устроена работа</h2>
-  <div class="how">
-    <p>Метод один и тот же независимо от рынка. Подробное описание — на отдельной
-    странице.</p>
-    <ol>
-      <li><b>Разобрать нишу целиком.</b> Не только чем компании отличаются друг от
-      друга, но и что мешает всей категории сразу.</li>
-      <li><b>Поговорить с людьми.</b> Глубинные интервью с собственником и с
-      покупателями: за какой работой человек на самом деле приходит к продукту.</li>
-      <li><b>Найти отличие, которое уже есть.</b> Обычно оно в компании присутствует,
-      но не стоит в центре предложения.</li>
-      <li><b>Проверить на тиражируемость.</b> Можно ли повторить это в другом городе
-      без потери качества.</li>
-      <li><b>Собрать позиционирование и материалы</b> — и отдельно определить, что
-      нужно поменять в самом продукте, чтобы обещание было правдой.</li>
-    </ol>
-    <div class="card-go"><a href="predlozhenie.html" style="color:var(--blue);text-decoration:none">Подробно о методике →</a></div>
-  </div>
-</section>
+
 
 <footer>
   <div>Игорь Малов · продуктовый маркетолог</div>
