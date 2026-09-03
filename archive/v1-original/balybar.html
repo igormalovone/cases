@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BALY BAR: разбор кейса</title>
+</head>
+<body>
+<style>
+  :root {
+    --ground: #F6F7F9; --panel: #FFFFFF; --ink: #1B1F26; --ink-soft: #4A525E;
+    --dim: #78818F; --rule: #DDE2E8; --rule-soft: #EBEEF2;
+    --blue: #2F5D8C; --blue-soft: #E8EEF5;
+    --signal: #9C3B34; --signal-soft: #F6E9E7; --dead: #A8AFB9;
+    --good: #2E6B4F; --good-soft: #E6F0EA;
+    --display: "Avenir Next", "Futura", "Trebuchet MS", sans-serif;
+    --body: "Charter", "Iowan Old Style", Georgia, serif;
+    --mono: "Menlo", ui-monospace, "SF Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+      --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+      --blue: #7FA9D6; --blue-soft: #1E2A36;
+      --signal: #D98A80; --signal-soft: #2E2220; --dead: #59616D;
+      --good: #7FC0A0; --good-soft: #1C2A24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+    --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+    --blue: #7FA9D6; --blue-soft: #1E2A36;
+    --signal: #D98A80; --signal-soft: #2E2220; --dead: #59616D;
+    --good: #7FC0A0; --good-soft: #1C2A24;
+  }
+  :root[data-theme="light"] {
+    --ground: #F6F7F9; --panel: #FFFFFF; --ink: #1B1F26; --ink-soft: #4A525E;
+    --dim: #78818F; --rule: #DDE2E8; --rule-soft: #EBEEF2;
+    --blue: #2F5D8C; --blue-soft: #E8EEF5;
+    --signal: #9C3B34; --signal-soft: #F6E9E7; --dead: #A8AFB9;
+    --good: #2E6B4F; --good-soft: #E6F0EA;
+  }
+
+  body { background: var(--ground); color: var(--ink); font-family: var(--body);
+    font-size: 18.5px; line-height: 1.65; margin: 0; padding: 0 20px 96px; }
+  .wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header { padding-top: 64px; display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow { font-family: var(--display); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dim); font-weight: 600; }
+  h1 { font-family: var(--display); font-size: clamp(30px, 5.4vw, 44px); line-height: 1.12;
+    font-weight: 600; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .lede { font-size: 19px; color: var(--ink-soft); margin: 0; max-width: 60ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--mono);
+    font-size: 12px; color: var(--dim); border-top: 1px solid var(--rule); padding-top: 16px; }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2 { font-family: var(--display); font-size: 13px; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 600; color: var(--blue); margin: 0;
+    padding-bottom: 10px; border-bottom: 2px solid var(--blue); }
+  p { margin: 0; max-width: 66ch; }
+  p.note { color: var(--ink-soft); font-size: 16.5px; }
+
+  .symptoms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .sym { background: var(--panel); padding: 16px 18px; font-size: 16px; line-height: 1.5;
+    display: flex; flex-direction: column; gap: 6px; }
+  .sym-n { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  .root { background: var(--signal-soft); border-left: 3px solid var(--signal);
+    padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .root-label { font-family: var(--display); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--signal); font-weight: 600; }
+  .root-text { font-family: var(--display); font-size: 19px; line-height: 1.4;
+    font-weight: 600; margin: 0; text-wrap: balance; }
+  .root-sub { font-size: 16px; color: var(--ink-soft); margin: 0; }
+
+  figure { margin: 0; background: var(--panel); border: 1px solid var(--rule);
+    padding: 24px 20px 18px; overflow-x: auto; }
+  figure svg { display: block; min-width: 520px; width: 100%; height: auto; }
+  figcaption { font-family: var(--mono); font-size: 13px; color: var(--dim); margin-top: 16px;
+    padding-top: 12px; border-top: 1px solid var(--rule-soft); line-height: 1.5; }
+
+  .n-box { fill: var(--panel); stroke: var(--rule); }
+  .n-box-hi { fill: var(--signal-soft); stroke: var(--signal); }
+  .n-box-cond { fill: var(--blue-soft); stroke: var(--blue); }
+  .n-t { font-family: var(--display); font-size: 14.5px; fill: var(--ink); }
+  .n-t-sm { font-family: var(--mono); font-size: 12px; fill: var(--dim); }
+  .n-line { stroke: var(--dim); stroke-width: 1.2; fill: none; }
+
+  .assume { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px;
+    background: var(--panel); border: 1px solid var(--rule); }
+  .assume-h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--dim); }
+  .assume-false { font-family: var(--display); font-size: 16.5px; font-weight: 600; margin: 0; }
+  .evidence { display: flex; flex-direction: column; gap: 7px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .evidence li { font-size: 16px; color: var(--ink-soft); padding-left: 20px; position: relative; }
+  .evidence li::before { content: "\2192"; position: absolute; left: 0; color: var(--blue);
+    font-family: var(--mono); font-size: 13px; }
+
+  .next { background: var(--blue-soft); border-left: 3px solid var(--blue);
+    padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .next-text { font-family: var(--display); font-size: 18px; font-weight: 600; line-height: 1.4; margin: 0; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 16px; }
+  thead th { font-family: var(--display); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--dim); font-weight: 600; text-align: left;
+    padding: 0 14px 10px; border-bottom: 1px solid var(--rule); }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft);
+    font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.was { color: var(--ink-soft); }
+  td.now { color: var(--good); font-weight: 600; }
+  .tw { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); padding: 18px 6px; }
+
+  .risks { display: flex; flex-direction: column; gap: 14px; }
+  .risk { padding: 16px 18px; background: var(--panel); border: 1px solid var(--rule);
+    border-top: 2px solid var(--signal); display: flex; flex-direction: column; gap: 6px; }
+  .risk-h { font-family: var(--display); font-size: 15.5px; font-weight: 600; }
+  .risk-d { font-size: 14.5px; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: grid; grid-template-columns: 32px 1fr; gap: 0 18px; padding: 16px 0;
+    border-bottom: 1px solid var(--rule-soft); align-items: start; }
+  .step:last-child { border-bottom: none; }
+  .step-n { font-family: var(--mono); font-size: 12px; color: var(--blue); padding-top: 2px; }
+  .step-b { display: flex; flex-direction: column; gap: 4px; }
+  .step-h { font-family: var(--display); font-size: 17px; font-weight: 600; }
+  .step-d { font-size: 15.5px; color: var(--ink-soft); line-height: 1.5; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .stat { background: var(--panel); padding: 18px 16px; display: flex; flex-direction: column; gap: 5px; }
+  .stat-v { font-family: var(--display); font-size: 30px; font-weight: 600; color: var(--signal);
+    font-variant-numeric: tabular-nums; line-height: 1; }
+  .stat-v.g { color: var(--good); }
+  .stat-l { font-size: 14.5px; color: var(--ink-soft); line-height: 1.35; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--mono);
+    font-size: 11.5px; color: var(--dim); line-height: 1.7; }
+  footer a { color: var(--blue); }
+
+  @media (max-width: 700px) {
+    body { font-size: 17.5px; padding: 0 14px 72px; }
+    .wrap { gap: 44px; }
+    figure { padding: 16px 12px 14px; }
+    figure svg { min-width: 460px; }
+    .n-t { font-size: 16px; }
+    .n-t-sm { font-size: 13px; }
+    .symptoms { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .fit { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Кейс &middot; разбор по теории ограничений</div>
+  <h1>BALY BAR: почему кофейню нельзя было тиражировать &mdash; и что с этим сделали</h1>
+  <p class="lede">Кофейня с авторскими напитками не продавалась как франшиза. Был предложен другой формат — и за три года сеть выросла до 144 точек.</p>
+  <div class="meta">
+    <span><b>Год решения</b> 2023</span>
+    <span><b>Система</b> франшиза, которую собирались строить</span>
+    <span><b>Метод</b> 8 фаз, корень проверен</span>
+  </div>
+</header>
+
+<section>
+  <h2>Что было на входе</h2>
+  <p>Компания работает с 2019 года. К 2023-му &mdash; <b>две кофейни</b>. Авторские безалкогольные энергетики и лимонады собственной рецептуры, которых нет в магазинах. Напитки готовились <b>на точке</b>, отдельного производства не существовало. Массово они не продавались.</p>
+  <p>Точки были прибыльными &mdash; 150&ndash;200 тыс ₽ в месяц каждая, это выше средней кофейни. Отличие сводилось к яркому оформлению и этим напиткам: заметное, но не такое, чтобы выделяться на фоне рынка.</p>
+</section>
+
+<section>
+  <h2>Что происходило на рынке в 2023 году</h2>
+
+  <p>Чтобы понять, почему решение выглядело неочевидным, нужно посмотреть на два рынка одновременно.</p>
+
+  <div class="fit" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)">
+    <div style="background:var(--panel);padding:22px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:var(--display);font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--signal)">Кофейни</div>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>2022 год — обвал.</b> Число кофеен в крупных городах упало на 27%. Часть сетей закрылась, часть заморозила открытия.</p>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>2023 год — отскок.</b> Спрос стабилизировался, замороженные проекты начали открываться, число точек выросло на 10%. Объём рынка — 182 млрд ₽.</p>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>Но это не рост, а возврат.</b> После падения на 27% прибавка в 10% не выводит выше прежнего уровня — рынок только отыгрывал потерянное.</p>
+    </div>
+    <div style="background:var(--panel);padding:22px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:var(--display);font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--good)">Вендинг</div>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>Рост на 24,9%</b> в деньгах, реальный спрос — плюс 13,9%. Вдвое быстрее кофеен.</p>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>Причина понятная:</b> люди вернулись в офисы, вузы и общественные места. Автомат стоит там, где человек проходит каждый день.</p>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0;line-height:1.5"><b>За пять лет рынок вырос впятеро</b> — до 60–80 млрд ₽. В стране работало 192,6 тысячи автоматов.</p>
+    </div>
+  </div>
+
+  <p>Оба рынка в 2023 году росли — но по-разному. <b>Кофейни возвращались к тому, что уже было. Вендинг шёл дальше того, что было.</b></p>
+
+  <div class="assume">
+    <div class="assume-h">И два сигнала, которых тогда почти никто не считал</div>
+    <ul class="evidence">
+      <li><b>Рынок автоматов был почти пустой.</b> В России 2–3 автомата на тысячу человек. В Европе — 20–30. То есть места хватало всем, кто зайдёт</li>
+      <li><b>Оборудование резко подешевело в доступе.</b> Выпуск вендинговых автоматов в стране вырос в десять раз за год — импортозамещение сработало, и купить аппарат стало проще, чем годом раньше</li>
+    </ul>
+  </div>
+
+  <p><b>При этом все шли в кофейни.</b> Отложенные проекты открывались, франчайзи снова вкладывались, Coffee Like за год добавил 283 точки. Со стороны это выглядело как самый очевидный сегмент для входа.</p>
+
+  <p class="note">Поэтому уход в вендинг и был решением против течения: цифры уже показывали, что там свободнее и растёт быстрее, но толпа двигалась в другую сторону.</p>
+
+  <p class="note">Через три года всё подтвердилось: закрытий кофеен стало на 20% больше, чем открытий, две трети точек не доживают до года. Рынок разошёлся на премиум и автоматы — обычные кофейни проигрывают и тем, и другим.</p>
+</section>
+
+<section>
+  <h2>Красный океан: с чем предстояло конкурировать</h2>
+  <p>Кофейные франшизы — один из самых плотных сегментов рынка. Инвестор, который решил вложиться в кофе, открывает каталог и видит десятки предложений с почти одинаковыми условиями.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 220" role="img" aria-label="Десятки однотипных кофейных франшиз">
+      <text class="n-t-sm" x="350" y="16" text-anchor="middle">что видит инвестор в каталоге франшиз</text>
+
+      <rect class="n-box" x="20" y="30" width="120" height="46" rx="2"/>
+      <text class="n-t" x="80" y="50" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="80" y="65" text-anchor="middle">от 1,5 млн</text>
+
+      <rect class="n-box" x="155" y="30" width="120" height="46" rx="2"/>
+      <text class="n-t" x="215" y="50" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="215" y="65" text-anchor="middle">от 1,7 млн</text>
+
+      <rect class="n-box" x="290" y="30" width="120" height="46" rx="2"/>
+      <text class="n-t" x="350" y="50" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="350" y="65" text-anchor="middle">от 2 млн</text>
+
+      <rect class="n-box" x="425" y="30" width="120" height="46" rx="2"/>
+      <text class="n-t" x="485" y="50" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="485" y="65" text-anchor="middle">от 1,4 млн</text>
+
+      <rect class="n-box" x="560" y="30" width="120" height="46" rx="2"/>
+      <text class="n-t" x="620" y="50" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="620" y="65" text-anchor="middle">от 2,5 млн</text>
+
+      <rect class="n-box" x="20" y="88" width="120" height="46" rx="2"/>
+      <text class="n-t" x="80" y="108" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="80" y="123" text-anchor="middle">от 1,9 млн</text>
+
+      <rect class="n-box" x="155" y="88" width="120" height="46" rx="2"/>
+      <text class="n-t" x="215" y="108" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="215" y="123" text-anchor="middle">от 2,2 млн</text>
+
+      <rect class="n-box-hi" x="290" y="88" width="120" height="46" rx="2"/>
+      <text class="n-t" x="350" y="108" text-anchor="middle" font-weight="600">BALY BAR</text>
+      <text class="n-t-sm" x="350" y="123" text-anchor="middle">2,5 млн</text>
+
+      <rect class="n-box" x="425" y="88" width="120" height="46" rx="2"/>
+      <text class="n-t" x="485" y="108" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="485" y="123" text-anchor="middle">от 1,6 млн</text>
+
+      <rect class="n-box" x="560" y="88" width="120" height="46" rx="2"/>
+      <text class="n-t" x="620" y="108" text-anchor="middle">Кофейня</text>
+      <text class="n-t-sm" x="620" y="123" text-anchor="middle">от 1,8 млн</text>
+
+      <text class="n-t" x="350" y="165" text-anchor="middle" font-weight="600">Условия почти одинаковые. Отличий не видно.</text>
+      <text class="n-t-sm" x="350" y="188" text-anchor="middle">выбор идёт по цене входа — а значит выигрывает тот, кто дешевле</text>
+      <text class="n-t-sm" x="350" y="205" text-anchor="middle">и по узнаваемости — а значит выигрывают крупные сети</text>
+    </svg>
+    <figcaption>В такой картине новой франшизе зацепиться не за что: она заведомо дороже мелких и заведомо слабее крупных по узнаваемости.</figcaption>
+  </figure>
+
+  <ul class="evidence">
+    <li><b>В одной локации соседствуют три-четыре точки разных сетей</b> и демпингуют цены друг против друга</li>
+    <li><b>Coffee Like за 2023 год добавил 283 точки</b> — против такой машины новичок не выигрывает ни по узнаваемости, ни в переговорах с арендодателями</li>
+    <li><b>Доля россиян, покупающих кофе в продуктовых, выросла вдвое за три года</b> — до 35%. Кофейни конкурируют уже и с магазинами</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Экономика кофейни — цифры отрасли</h2>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">25%</div><div class="stat-l">рентабельность средней кофейни</div></div>
+    <div class="stat"><div class="stat-v">10–18 мес</div><div class="stat-l">окупаемость вложений</div></div>
+    <div class="stat"><div class="stat-v">20–23%</div><div class="stat-l">выручки уходит на зарплаты</div></div>
+    <div class="stat"><div class="stat-v">10–12%</div><div class="stat-l">выручки уходит на аренду</div></div>
+    <div class="stat"><div class="stat-v">1,67 млн ₽</div><div class="stat-l">запуск одной точки</div></div>
+    <div class="stat"><div class="stat-v">3–4</div><div class="stat-l">точки разных сетей в одной локации, демпингуют</div></div>
+  </div>
+  <p class="note">Это средние по отрасли, и они одинаковы для всех — потому что все кофейни устроены одинаково.</p>
+</section>
+
+<section>
+  <h2>Симптомы</h2>
+  <p class="note">Часть из этого свойственна всем кофейням — так устроена категория. Часть касается конкретно этой франшизы. Разделять смысла нет: покупатель видит всё вместе и решение принимает по всей картине сразу.</p>
+  <div class="symptoms">
+    <div class="sym"><span class="sym-n">01</span>За четыре года сеть выросла до двух точек &mdash; доказательства тиражируемости нет</div>
+    <div class="sym"><span class="sym-n">02</span>Напитки готовятся на точке, результат зависит от того, кто на смене</div>
+    <div class="sym"><span class="sym-n">03</span>Уникальные напитки нельзя передать франчайзи как готовый актив &mdash; только научить готовить</div>
+    <div class="sym"><span class="sym-n">04</span>Отличие сводится к оформлению и рецептуре, которую способна повторить любая кофейня</div>
+    <div class="sym"><span class="sym-n">05</span>Франчайзи придётся нанимать и обучать бариста при постоянной текучке в отрасли</div>
+    <div class="sym"><span class="sym-n">06</span>Нужен зал и проходная локация, вход 2,5 млн ₽ &mdash; круг покупателей узкий</div>
+    <div class="sym"><span class="sym-n">07</span>Окупаемость около 14 месяцев &mdash; при том что сами точки прибыльны, 150&ndash;200 тыс ₽/мес</div>
+    <div class="sym"><span class="sym-n">08</span>Выручка жёстко ограничена часами работы и потоком мимо двери</div>
+    <div class="sym"><span class="sym-n">09</span>Предложение попадает в сравнение с десятками кофейных франшиз с теми же условиями</div>
+    <div class="sym"><span class="sym-n">10</span>Против сетей уровня Coffee Like проигрывает по узнаваемости и поддержке</div>
+    <div class="sym"><span class="sym-n">11</span>Франчайзер не участвует в закупках &mdash; зерно и молоко покупаются на общем рынке, зарабатывать на поставке нечего</div>
+    <div class="sym"><span class="sym-n">12</span>Роялти приходится собирать на доверии &mdash; выручка проходит через кассу на точке</div>
+    <div class="sym"><span class="sym-n">13</span>Франчайзи ничто не держит: через год у него своя локация, своё оборудование и знание рецептуры</div>
+    <div class="sym"><span class="sym-n">14</span>Модель требует присутствия владельца &mdash; инвестор, ищущий вложение, а не работу, отпадает</div>
+    <div class="sym"><span class="sym-n">15</span>Выручка зависит от сезона и погоды</div>
+    <div class="sym"><span class="sym-n">16</span>Рецептура передаётся франчайзи в составе пакета &mdash; уникальность уходит к покупателю</div>
+    <div class="sym"><span class="sym-n">17</span>Поставщики передаются тоже &mdash; франчайзи получает всё, чтобы работать самостоятельно</div>
+    <div class="sym"><span class="sym-n">18</span>Пакет типовой: поддержка, помещение, поставщики, рецепты &mdash; ровно то же, что у остальных</div>
+    <div class="sym"><span class="sym-n">19</span>Главный аргумент в продаже &mdash; атмосфера: светлая, тропическая, яркое оформление</div>
+  </div>
+</section>
+
+<section>
+  <h2>Всё сходится в одну точку</h2>
+  <figure>
+    <svg viewBox="0 0 700 260" role="img" aria-label="Проблемы кофейни сходятся к одному">
+      <rect class="n-box" x="10" y="20" width="150" height="42" rx="2"/>
+      <text class="n-t" x="85" y="40" text-anchor="middle">Вкус зависит</text>
+      <text class="n-t" x="85" y="54" text-anchor="middle">от бариста</text>
+
+      <rect class="n-box" x="10" y="80" width="150" height="42" rx="2"/>
+      <text class="n-t" x="85" y="100" text-anchor="middle">Нужен зал</text>
+      <text class="n-t" x="85" y="114" text-anchor="middle">и проходная локация</text>
+
+      <rect class="n-box" x="10" y="140" width="150" height="42" rx="2"/>
+      <text class="n-t" x="85" y="160" text-anchor="middle">Выручка = часы</text>
+      <text class="n-t" x="85" y="174" text-anchor="middle">× поток мимо двери</text>
+
+      <rect class="n-box" x="10" y="200" width="150" height="42" rx="2"/>
+      <text class="n-t" x="85" y="220" text-anchor="middle">Рецепты уходят</text>
+      <text class="n-t" x="85" y="234" text-anchor="middle">вместе с франчайзи</text>
+
+      <path class="n-line" d="M160 41 L250 120"/>
+      <path class="n-line" d="M160 101 L250 124"/>
+      <path class="n-line" d="M160 161 L250 136"/>
+      <path class="n-line" d="M160 221 L250 140"/>
+
+      <rect class="n-box-hi" x="255" y="105" width="200" height="52" rx="2"/>
+      <text class="n-t" x="355" y="126" text-anchor="middle" font-weight="600">Продукт не существует</text>
+      <text class="n-t" x="355" y="142" text-anchor="middle" font-weight="600">отдельно от точки</text>
+
+      <path class="n-line" d="M455 131 L510 131"/>
+
+      <rect class="n-box-cond" x="515" y="80" width="175" height="42" rx="2"/>
+      <text class="n-t" x="602" y="100" text-anchor="middle">Отличие держится</text>
+      <text class="n-t" x="602" y="114" text-anchor="middle">на атмосфере</text>
+
+      <rect class="n-box-cond" x="515" y="140" width="175" height="42" rx="2"/>
+      <text class="n-t" x="602" y="160" text-anchor="middle">Инвестор видит</text>
+      <text class="n-t" x="602" y="174" text-anchor="middle">обычную кофейню</text>
+
+      <path class="n-line" d="M510 131 L515 101"/>
+      <path class="n-line" d="M510 131 L515 161"/>
+    </svg>
+    <figcaption>Разные на вид проблемы оказываются одной. Продукт рождается и продаётся внутри одного помещения, руками одного человека.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Корневая причина</h2>
+  
+  
+
+  <div class="root">
+    <div class="root-label">Корневая причина</div>
+    <p class="root-text">Продукт не существует отдельно от точки.</p>
+    <p class="root-sub">Он рождается и умирает внутри одного помещения, руками одного человека. Поэтому его нельзя ни отгрузить, ни воспроизвести в другом городе, ни проконтролировать, ни продать без зала и смены.</p>
+  </div>
+
+  <p><b>Проверим по-простому.</b> Представим, что напиток делают не на точке, а привозят готовым. Что тогда: вкус одинаковый везде, отличие можно передать партнёру, франчайзи зависит от поставок, сеть зарабатывает с каждой отгрузки, оборот виден, бариста не нужен, зал не обязателен. Почти все проблемы из списка исчезают сами.</p>
+
+  <p>И дело не в деньгах и не в людях. Просто бизнес так устроен с самого начала — и это устройство никто не пересматривал.</p>
+</section>
+
+<section>
+  <h2>Проверка на контрпримере: как это решил Starbucks</h2>
+  <p>Если корень настоящий, он должен объяснять и тех, кто справился. Starbucks масштабировался до десятков тысяч точек &mdash; значит либо корень ложный, либо Starbucks решал ровно эту задачу.</p>
+  <ul class="evidence">
+    <li><b>Убрал навык из процесса.</b> Заказал у Thermoplan машину Mastrena эксклюзивно под себя &mdash; суперавтомат делает помол, заваривание и молоко сам. Программируемые рецепты дают одинаковый вкус во всех точках. В описании прямо указано, зачем: это критично там, где высокая текучка и новых нужно обучать быстро</li>
+    <li><b>Отказался от франшизы.</b> Точки корпоративные или лицензионные, купить франшизу нельзя. Обоснование Шульца: премиальный продукт требует обученного персонала, и с франчайзи обеспечить это трудно</li>
+    <li><b>Зарабатывает на поставках.</b> В лицензионной модели получает маржу на брендированных продуктах плюс роялти</li>
+  </ul>
+  <p><b>Корень подтверждается.</b> Starbucks не научился держать качество на людях &mdash; он убрал людей из процесса, оставил точки себе и перенёс заработок в поставку. Три хода против одной причины.</p>
+  <p class="note">Но связка уточняется: нужно второе условие. <b>Если продукт готовится человеком на точке И у сети нет ресурса на дорогую автоматизацию и жёсткий контроль</b> &mdash; тогда качество в другом городе не гарантируется. У Starbucks ресурс был: миллиарды и эксклюзивная разработка машины. У сети из двух кофеен &mdash; нет. Один и тот же корень, разные решения по масштабу.</p>
+</section>
+
+<section>
+  <h2>Что удерживало это годами</h2>
+
+  <figure>
+    <svg viewBox="0 0 700 250" role="img" aria-label="Грозовая туча: особенное против одинакового">
+      <rect class="n-box-cond" x="10" y="100" width="170" height="52" rx="2"/>
+      <text class="n-t" x="95" y="122" text-anchor="middle" font-weight="600">Франшиза,</text>
+      <text class="n-t" x="95" y="138" text-anchor="middle" font-weight="600">которая растёт</text>
+      <text class="n-t-sm" x="95" y="92" text-anchor="middle">A &middot; цель</text>
+
+      <path class="n-line" d="M180 118 L235 66"/>
+      <path class="n-line" d="M180 134 L235 186"/>
+
+      <rect class="n-box" x="238" y="40" width="180" height="52" rx="2"/>
+      <text class="n-t" x="328" y="62" text-anchor="middle">Продукт остаётся</text>
+      <text class="n-t" x="328" y="78" text-anchor="middle">особенным</text>
+      <text class="n-t-sm" x="328" y="32" text-anchor="middle">B</text>
+
+      <rect class="n-box" x="238" y="160" width="180" height="52" rx="2"/>
+      <text class="n-t" x="328" y="182" text-anchor="middle">Продукт одинаков</text>
+      <text class="n-t" x="328" y="198" text-anchor="middle">во всех городах</text>
+      <text class="n-t-sm" x="328" y="228" text-anchor="middle">C</text>
+
+      <path class="n-line" d="M418 66 L470 66"/>
+      <path class="n-line" d="M418 186 L470 186"/>
+
+      <rect class="n-box" x="473" y="40" width="215" height="52" rx="2"/>
+      <text class="n-t" x="580" y="62" text-anchor="middle">Готовить на точке,</text>
+      <text class="n-t" x="580" y="78" text-anchor="middle">руками, при госте</text>
+      <text class="n-t-sm" x="580" y="32" text-anchor="middle">D</text>
+
+      <rect class="n-box" x="473" y="160" width="215" height="52" rx="2"/>
+      <text class="n-t" x="580" y="182" text-anchor="middle">Производить</text>
+      <text class="n-t" x="580" y="198" text-anchor="middle">централизованно</text>
+      <text class="n-t-sm" x="580" y="228" text-anchor="middle">D&prime;</text>
+
+      <path d="M580 92 L580 160" stroke="var(--signal)" stroke-width="1.6" stroke-dasharray="5 4" fill="none"/>
+      <text x="596" y="130" font-family="var(--mono)" font-size="11" fill="var(--signal)">конфликт</text>
+    </svg>
+    <figcaption>Особенное против одинакового &mdash; главное противоречие франчайзинга. В кофейнях оно острее всего, потому что весь смысл категории держится на &laquo;свежесваренном при тебе&raquo;.</figcaption>
+  </figure>
+
+  <div class="assume">
+    <div class="assume-h">Ложное допущение</div>
+    <p class="assume-false">&laquo;Напиток особенный именно потому, что готовится здесь и сейчас&raquo;</p>
+    <ul class="evidence">
+      <li>Для кофе это правда: эспрессо живёт три минуты, его нельзя приготовить вчера. Поэтому вся отрасль тащит бариста за собой обоснованно</li>
+      <li>Но здесь продукт &mdash; не кофе. Энергетики и лимонады не теряют ничего, если приготовлены накануне на производстве</li>
+      <li>Требование унаследовано от категории, а не от продукта</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Решение</h2>
+
+  <div class="next">
+    <div class="root-label" style="color:var(--blue)">Инъекция</div>
+    <p class="next-text">Вынести продукт из точки: производство отдельно, продажа через автомат.</p>
+    <p class="root-sub">Суть продукта сохраняется — авторские напитки собственного производства. Часть рецептов сделали заново, уже под новый формат. Меняется место, где напиток рождается, и способ, которым он попадает к покупателю.</p>
+  </div>
+
+  <p><b>Обе стороны конфликта получают своё, без компромисса.</b> Особенность остаётся: это по-прежнему авторские напитки, которых нет в магазинах — часть из них разработали специально под автомат. И рецептура теперь в одних руках, а не расходится по бариста в каждом городе. Одинаковость появляется: продукт делают в одном месте, и он приезжает в каждую точку таким же.</p>
+
+  <p><b>И вот что произошло с отличием &mdash; это главное в кейсе.</b> У кофейни отличие держалось на оформлении и напитках, которые готовили руками: такое рассыпается при масштабировании. После смены формата отличие переехало в продукт, производимый централизованно. <b>Оно переместилось туда, где тиражируется.</b> Именно это сделало франшизу возможной.</p>
+
+  <p class="note">Важная деталь: производство было построено <b>вместе</b> с вендингом, до этого его не было. Отделить продукт от точки — значит создать новое звено, а не переставить старые. Это стоит денег, и говорить об этом надо сразу.</p>
+</section>
+
+<section>
+  <h2>Что изменилось в устройстве</h2>
+  <figure>
+    <svg viewBox="0 0 700 230" role="img" aria-label="Кофейня против вендинга">
+      <text class="n-t-sm" x="170" y="18" text-anchor="middle">БЫЛО · кофейня</text>
+      <rect class="n-box" x="30" y="30" width="280" height="170" rx="2"/>
+
+      <rect class="n-box-cond" x="55" y="50" width="230" height="36" rx="2"/>
+      <text class="n-t" x="170" y="72" text-anchor="middle">Напиток готовят на точке</text>
+
+      <rect class="n-box-cond" x="55" y="96" width="230" height="36" rx="2"/>
+      <text class="n-t" x="170" y="118" text-anchor="middle">Нужен бариста и зал</text>
+
+      <rect class="n-box-cond" x="55" y="142" width="230" height="36" rx="2"/>
+      <text class="n-t" x="170" y="164" text-anchor="middle">Отличие — в атмосфере</text>
+
+      <text class="n-t" x="350" y="120" text-anchor="middle" font-size="22" fill="var(--dim)">→</text>
+
+      <text class="n-t-sm" x="530" y="18" text-anchor="middle">СТАЛО · вендинг</text>
+      <rect class="n-box-hi" x="390" y="30" width="280" height="170" rx="2"/>
+
+      <rect class="n-box" x="415" y="50" width="230" height="36" rx="2"/>
+      <text class="n-t" x="530" y="72" text-anchor="middle">Напиток делают на производстве</text>
+
+      <rect class="n-box" x="415" y="96" width="230" height="36" rx="2"/>
+      <text class="n-t" x="530" y="118" text-anchor="middle">Точка — автомат, людей нет</text>
+
+      <rect class="n-box" x="415" y="142" width="230" height="36" rx="2"/>
+      <text class="n-t" x="530" y="164" text-anchor="middle">Отличие — в самом напитке</text>
+    </svg>
+    <figcaption>Продукт остался авторским, часть напитков сделали заново под новый формат. Главное изменение в другом: напиток теперь рождается на производстве, а не на точке. Отличие переехало туда, где его можно тиражировать.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Что получилось</h2>
+  <div class="stats">
+    <div class="stat"><div class="stat-v g">144</div><div class="stat-l">франшизы за три года</div></div>
+    <div class="stat"><div class="stat-v g">41,3%</div><div class="stat-l">рентабельность против 25% у кофеен</div></div>
+    <div class="stat"><div class="stat-v g">4 месяца</div><div class="stat-l">окупаемость против 10–18</div></div>
+    <div class="stat"><div class="stat-v g">0 ₽</div><div class="stat-l">фонд оплаты труда на точке</div></div>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Показатель</th><th>Кофейня &mdash; рынок</th><th>BALY BAR &mdash; вендинг</th></tr></thead>
+      <tbody>
+        <tr><td>Рентабельность</td><td class="was">около 25%</td><td class="now">41,3%</td></tr>
+        <tr><td>Окупаемость</td><td class="was">от 10 месяцев до 3 лет</td><td class="now">4 месяца</td></tr>
+        <tr><td>Фонд оплаты труда</td><td class="was">20&ndash;23% выручки</td><td class="now">нет</td></tr>
+        <tr><td>Площадь</td><td class="was">зал, аренда 10&ndash;12% выручки</td><td class="now">место под аппарат</td></tr>
+        <tr><td>Часы работы</td><td class="was">по графику смены</td><td class="now">круглосуточно</td></tr>
+        <tr><td>Участие владельца</td><td class="was">управление персоналом</td><td class="now">несколько часов в неделю</td></tr>
+        <tr><td>Вход</td><td class="was">от 1,67 млн ₽</td><td class="now">аппарат 600 тыс ₽</td></tr>
+        <tr><td>Роялти</td><td class="was">есть почти везде</td><td class="now">нет &mdash; доход в поставке напитков</td></tr>
+        <tr><td>Удержание франчайзи</td><td class="was">нечем</td><td class="now">напиток больше негде взять</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><b>За три года после запуска франшизы:</b> 149 точек. Паушальный взнос от 590 000 ₽, инвестиции от 1,19 млн, средняя выручка аппарата 4 800 ₽ в день, чистая прибыль от 59 000 ₽ с аппарата.</p>
+  <p class="note">Сегодня сеть описывает себя так: <b>«вендинговый бизнес с уникальной конкурентной концепцией при минимальных инвестициях»</b>. Концепция стала ядром продающего сообщения — то есть решение не осталось идеей на бумаге, а вошло и в маркетинг, и в модель.</p>
+</section>
+
+<section>
+  <h2>Что здесь воспроизводимо</h2>
+  <p class="note">Ход не привязан к напиткам. Он повторяется везде, где продукт рождается и умирает внутри точки: общепит, услуги, барбершопы, ремонт.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">01</div>
+      <div class="step-b">
+        <div class="step-h">Найти корень ниши до встречи с клиентом</div>
+        <div class="step-d">Один раз на категорию. На встрече останется проверить гипотезу вопросами, а не искать с нуля. Проверка простая: сколько симптомов клиента объясняется этим корнем? Восемь из десяти &mdash; работает. Половина &mdash; у него своя причина, и она бьёт раньше.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <div class="step-b">
+        <div class="step-h">Найти, что уникально и способно жить отдельно</div>
+        <div class="step-d">Не спрашивать владельца, что у него уникального &mdash; он назовёт сервис, людей и подход. Спрашивать: чего покупатель не может получить больше нигде. <b>Тест: можно ли это положить в коробку и отправить в другой город?</b> Отгрузить, записать, произвести централизованно, встроить в оборудование. Если нельзя &mdash; франшизу на этом не построить.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <div class="step-b">
+        <div class="step-h">Перенести уникальность туда, где она воспроизводится</div>
+        <div class="step-d">Не сохранить в прежнем виде &mdash; там она и гибнет при масштабировании. Перенести: из рук человека в производство, из процесса в продукт, из атмосферы в технологию.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <div class="step-b">
+        <div class="step-h">Пересобрать экономику под новый формат</div>
+        <div class="step-d">Смена формата тянет за собой смену модели заработка франчайзера. Здесь исчезло роялти и появился доход с поставки &mdash; одновременно решив и то, что оборот не виден, и то, что франчайзи нечем удержать.</div>
+      </div>
+    </div>
+  </div>
+  <p><b>Если уникальности нет</b> &mdash; порядок такой: сначала искать ту, что уже есть и не используется (случай BALY BAR: напитки существовали четыре года и массово не продавались), затем собирать из имеющегося, и только в последнюю очередь создавать с нуля. Последнее &mdash; другая работа, другие деньги и другой срок.</p>
+</section>
+
+<footer>
+  Разбор построен по методу теории ограничений Голдратта.
+</footer>
+
+</div>
+</body>
+</html>

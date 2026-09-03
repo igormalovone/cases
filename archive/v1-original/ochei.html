@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OCHEI CHARM: концепция франшизы</title>
+</head>
+<body>
+<style>
+  :root {
+    --ground: #F6F7F9; --panel: #FFFFFF; --ink: #1B1F26; --ink-soft: #4A525E;
+    --dim: #78818F; --rule: #DDE2E8; --rule-soft: #EBEEF2;
+    --blue: #2F5D8C; --blue-soft: #E8EEF5;
+    --signal: #9C3B34; --signal-soft: #F6E9E7; --dead: #A8AFB9;
+    --good: #2E6B4F; --good-soft: #E6F0EA;
+    --display: "Avenir Next", "Futura", "Trebuchet MS", sans-serif;
+    --body: "Charter", "Iowan Old Style", Georgia, serif;
+    --mono: "Menlo", ui-monospace, "SF Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+      --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+      --blue: #7FA9D6; --blue-soft: #1E2A36;
+      --signal: #D98A80; --signal-soft: #2E2220; --dead: #59616D;
+      --good: #7FC0A0; --good-soft: #1C2A24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #14171C; --panel: #1B1F26; --ink: #E3E7EC; --ink-soft: #B2BAC5;
+    --dim: #838C99; --rule: #2C323B; --rule-soft: #232830;
+    --blue: #7FA9D6; --blue-soft: #1E2A36;
+    --signal: #D98A80; --signal-soft: #2E2220; --dead: #59616D;
+    --good: #7FC0A0; --good-soft: #1C2A24;
+  }
+  :root[data-theme="light"] {
+    --ground: #F6F7F9; --panel: #FFFFFF; --ink: #1B1F26; --ink-soft: #4A525E;
+    --dim: #78818F; --rule: #DDE2E8; --rule-soft: #EBEEF2;
+    --blue: #2F5D8C; --blue-soft: #E8EEF5;
+    --signal: #9C3B34; --signal-soft: #F6E9E7; --dead: #A8AFB9;
+    --good: #2E6B4F; --good-soft: #E6F0EA;
+  }
+
+  body { background: var(--ground); color: var(--ink); font-family: var(--body);
+    font-size: 18.5px; line-height: 1.65; margin: 0; padding: 0 20px 96px; }
+  .wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header { padding-top: 64px; display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow { font-family: var(--display); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dim); font-weight: 600; }
+  h1 { font-family: var(--display); font-size: clamp(30px, 5.4vw, 44px); line-height: 1.12;
+    font-weight: 600; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .lede { font-size: 19px; color: var(--ink-soft); margin: 0; max-width: 60ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--mono);
+    font-size: 12px; color: var(--dim); border-top: 1px solid var(--rule); padding-top: 16px; }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2 { font-family: var(--display); font-size: 13px; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 600; color: var(--blue); margin: 0;
+    padding-bottom: 10px; border-bottom: 2px solid var(--blue); }
+  p { margin: 0; max-width: 66ch; }
+  p.note { color: var(--ink-soft); font-size: 16.5px; }
+
+  .symptoms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .sym { background: var(--panel); padding: 16px 18px; font-size: 16px; line-height: 1.5;
+    display: flex; flex-direction: column; gap: 6px; }
+  .sym-n { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  .root { background: var(--signal-soft); border-left: 3px solid var(--signal);
+    padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .root-label { font-family: var(--display); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--signal); font-weight: 600; }
+  .root-text { font-family: var(--display); font-size: 19px; line-height: 1.4;
+    font-weight: 600; margin: 0; text-wrap: balance; }
+  .root-sub { font-size: 16px; color: var(--ink-soft); margin: 0; }
+
+  figure { margin: 0; background: var(--panel); border: 1px solid var(--rule);
+    padding: 24px 20px 18px; overflow-x: auto; }
+  figure svg { display: block; min-width: 520px; width: 100%; height: auto; }
+  figcaption { font-family: var(--mono); font-size: 13px; color: var(--dim); margin-top: 16px;
+    padding-top: 12px; border-top: 1px solid var(--rule-soft); line-height: 1.5; }
+
+  .n-box { fill: var(--panel); stroke: var(--rule); }
+  .n-box-hi { fill: var(--signal-soft); stroke: var(--signal); }
+  .n-box-cond { fill: var(--blue-soft); stroke: var(--blue); }
+  .n-t { font-family: var(--display); font-size: 14.5px; fill: var(--ink); }
+  .n-t-sm { font-family: var(--mono); font-size: 12px; fill: var(--dim); }
+  .n-line { stroke: var(--dim); stroke-width: 1.2; fill: none; }
+
+  .assume { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px;
+    background: var(--panel); border: 1px solid var(--rule); }
+  .assume-h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--dim); }
+  .assume-false { font-family: var(--display); font-size: 16.5px; font-weight: 600; margin: 0; }
+  .evidence { display: flex; flex-direction: column; gap: 7px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .evidence li { font-size: 16px; color: var(--ink-soft); padding-left: 20px; position: relative; }
+  .evidence li::before { content: "\2192"; position: absolute; left: 0; color: var(--blue);
+    font-family: var(--mono); font-size: 13px; }
+
+  .next { background: var(--blue-soft); border-left: 3px solid var(--blue);
+    padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .next-text { font-family: var(--display); font-size: 18px; font-weight: 600; line-height: 1.4; margin: 0; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 16px; }
+  thead th { font-family: var(--display); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--dim); font-weight: 600; text-align: left;
+    padding: 0 14px 10px; border-bottom: 1px solid var(--rule); }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft);
+    font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.was { color: var(--ink-soft); }
+  td.now { color: var(--good); font-weight: 600; }
+  .tw { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); padding: 18px 6px; }
+
+  .risks { display: flex; flex-direction: column; gap: 14px; }
+  .risk { padding: 16px 18px; background: var(--panel); border: 1px solid var(--rule);
+    border-top: 2px solid var(--signal); display: flex; flex-direction: column; gap: 6px; }
+  .risk-h { font-family: var(--display); font-size: 15.5px; font-weight: 600; }
+  .risk-d { font-size: 14.5px; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: grid; grid-template-columns: 32px 1fr; gap: 0 18px; padding: 16px 0;
+    border-bottom: 1px solid var(--rule-soft); align-items: start; }
+  .step:last-child { border-bottom: none; }
+  .step-n { font-family: var(--mono); font-size: 12px; color: var(--blue); padding-top: 2px; }
+  .step-b { display: flex; flex-direction: column; gap: 4px; }
+  .step-h { font-family: var(--display); font-size: 17px; font-weight: 600; }
+  .step-d { font-size: 15.5px; color: var(--ink-soft); line-height: 1.5; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--mono);
+    font-size: 11.5px; color: var(--dim); line-height: 1.7; }
+  footer a { color: var(--blue); }
+
+  @media (max-width: 700px) {
+    body { font-size: 17.5px; padding: 0 14px 72px; }
+    .wrap { gap: 44px; }
+    figure { padding: 16px 12px 14px; }
+    figure svg { min-width: 460px; }
+    .n-t { font-size: 16px; }
+    .n-t-sm { font-size: 13px; }
+    .symptoms { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .fit { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">OCHEI CHARM &middot; новая концепция франшизы</div>
+  <h1>Франшиза, которую не с чем сравнить</h1>
+  <p class="lede">Что было, какую концепцию я предложил, что уже реализовано и куда сеть идёт дальше.</p>
+  <div class="meta">
+    <span><b>Вход</b> 700 тыс &ndash; 1 млн ₽</span>
+    <span><b>Прибыль точки</b> 200&ndash;300 тыс ₽/мес</span>
+  </div>
+</header>
+
+<section>
+  <h2>1. Ситуация на рынке</h2>
+  <p>Ниша перестала быть пустой. Сегодня фото радужки предлагают минимум семь игроков: Macrolook, Screen Eyes, Айрис, Окотека, OCHEY, Vinyl-art и мы.</p>
+  <p>Все делают одно и то же: макросъёмка, обработка, печать на бумаге, холсте, стекле, аксессуары. Кто-то дороже, кто-то дешевле, но <b>суть предложения одинаковая</b>.</p>
+  <p>Экономика точки при этом хорошая &mdash; 200&ndash;300 тысяч чистой прибыли в месяц. Дело не в том, что бизнес плохо работает. Дело в том, что <b>покупателю франшизы не за что зацепиться</b>: он смотрит на несколько похожих предложений и выбирает по цене или не выбирает вовсе.</p>
+</section>
+
+<section>
+  <h2>2. Корневая причина</h2>
+  <p class="note">В любой системе есть одно узкое место, которое определяет результат. Улучшать всё остальное бесполезно &mdash; нужно найти его.</p>
+
+  <div class="root">
+    <div class="root-label">Узкое место</div>
+    <p class="root-text">Всё, из чего состоит эта франшиза, покупатель может получить и без неё.</p>
+    <p class="root-sub">Оборудование продаётся свободно. Технология передаётся в пакете. Обучение занимает неделю. Расходники есть на общем рынке.</p>
+  </div>
+
+  <p>Отсюда растёт и то, что франшиза не отличается от других, и то, что партнёра нечем удержать в сети: получив пакет, он через год может работать сам. Именно поэтому в городах и появляются одиночные студии.</p>
+  <p><b>Пока это так &mdash; никакая упаковка и никакая реклама не помогут.</b> Меняется не подача, а сам предмет продажи.</p>
+</section>
+
+<section>
+  <h2>3. К чему нужно прийти</h2>
+  <p class="note">Прежде чем искать решение, нужно назвать, что считать результатом. Иначе непонятно, годится решение или нет.</p>
+
+  <div class="symptoms">
+    <div class="sym"><span class="sym-n">01</span>Отличие видно сразу и не требует объяснений</div>
+    <div class="sym"><span class="sym-n">02</span>Оно выдерживает проверку: человек ищет похожее и не находит</div>
+    <div class="sym"><span class="sym-n">03</span>Продавать франшизу может любой человек, а не только тот, кто её придумал</div>
+    <div class="sym"><span class="sym-n">04</span>Нас не сравнивают по цене, потому что сравнивать не с чем</div>
+    <div class="sym"><span class="sym-n">05</span>Партнёру невыгодно уходить: без системы точка не работает</div>
+    <div class="sym"><span class="sym-n">06</span>Есть основания верить, что ниша не схлопнется через год</div>
+    <div class="sym"><span class="sym-n">07</span>Даже если в городе покупателя уже есть студия &mdash; такого, как у нас, там нет</div>
+    <div class="sym"><span class="sym-n">08</span>Работа точки не зависит от квалификации конкретного сотрудника</div>
+    <div class="sym"><span class="sym-n">09</span>Оборот партнёра виден сети, а не сообщается со слов</div>
+    <div class="sym"><span class="sym-n">10</span>Сеть зарабатывает не только на входе партнёра, но и на его работе</div>
+  </div>
+</section>
+
+<section>
+  <h2>4. Решение</h2>
+  <p>Узкое место снимается одним способом: <b>в франшизе должно появиться то, чего нельзя получить самостоятельно.</b></p>
+  <p class="note">У сети была наработка по разбору радужки &mdash; в зачаточном виде, как побочная возможность. <b>Я предложил превратить её в ядро франшизы:</b> оформить в отдельный сервис на искусственном интеллекте, куда каждый партнёр загружает снимок и получает готовый разбор для клиента. Не украшение к печати, а то, ради чего к нам идут.</p>
+
+  <div class="next">
+    <div class="root-label" style="color:var(--blue)">Что мы продаём вместо печати</div>
+    <p class="next-text">Не картинку, а разбор радужки: человек узнаёт что-то о себе и уносит это домой в виде отпечатка.</p>
+  </div>
+
+  <p><b>Разбора радужки нет ни у одной студии в нише.</b> Проверяется за минуту: все семь игроков продают печать. Иридодиагностика как услуга существует &mdash; но в клиниках и косметологических центрах, куда человек идёт специально и платит как за медицинскую процедуру.</p>
+
+  <p>Мы соединяем две вещи, которые до сих пор жили порознь: <b>красивый снимок, который человек уносит домой, и разбор, который рассказывает ему о нём самом.</b> Формат художественно-эстетический &mdash; никаких диагнозов и заключений о здоровье. Это то, что интересно узнать про себя, а не то, с чем идут к врачу.</p>
+
+  <div class="assume">
+    <div class="assume-h">Что это меняет</div>
+    <p class="assume-false">Человек приходит не за картинкой, а за тем, чтобы узнать что-то о себе</p>
+    <ul class="evidence">
+      <li>Картинку сравнивают по цене с соседней студией. Разбор сравнивать не с чем</li>
+      <li>Картинку покупают один раз. За разбором приводят семью и берут сертификаты в подарок &mdash; так уже происходит на действующих точках</li>
+      <li>Разбор &mdash; повод рассказать о себе другим, а это приводит новых людей без рекламы</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>5. Почему партнёру невыгодно уходить</h2>
+  <p>Удерживать договором бесполезно &mdash; кто захочет уйти, уйдёт. Удерживает другое: <b>уходить должно быть просто неудобно.</b></p>
+  <ul class="evidence">
+    <li><b>Обработка идёт на серверах сети.</b> Уйти &mdash; значит вернуться к ручной работе в фотошопе, которой надо учиться, вместо тридцати секунд по кнопке</li>
+    <li><b>Разбор радужки работает только внутри системы.</b> Снаружи его не купить и не воспроизвести</li>
+    <li><b>База клиентов хранится у сети.</b> Модель та же, что у маркетплейсов: продавец не владеет данными покупателей, обработка идёт на чужих серверах, и это понятно с самого начала</li>
+  </ul>
+  <p class="note">И то же самое даёт сети контроль: раз все операции проходят через систему, оборот виден по факту &mdash; значит роялти можно считать процентом, а не брать фиксом вслепую.</p>
+</section>
+
+<section>
+  <h2>6. Что получает партнёр</h2>
+  <div class="fit" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)">
+    <div style="background:var(--panel);padding:20px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--good)">Не нужен дорогой специалист</div>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0">Обработку делает система. Сотрудника не нужно искать месяцами, учить фотошопу и бояться, что он уйдёт. Ушёл человек &mdash; точка работает дальше.</p>
+    </div>
+    <div style="background:var(--panel);padding:20px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--good)">Видно, что происходит на точке</div>
+      <p style="font-size:15px;color:var(--ink-soft);margin:0">Сколько съёмок, сколько покупок, какая конверсия, кто из сотрудников как продаёт &mdash; в момент, когда это происходит, а не по памяти в конце месяца.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>7. Куда это ведёт дальше</h2>
+
+  <div class="next">
+    <div class="root-label" style="color:var(--blue)">Следующий шаг после сети студий</div>
+    <p class="next-text">Автомат: человек сам сканирует глаз, платит картой и получает снимок с разбором. Без сотрудника, круглосуточно.</p>
+    <p class="root-sub">Автоматов для съёмки радужки не существует нигде. Фотобудки есть &mdash; для документов и деловых портретов. Макросъёмки радужки в автомате нет ни у одного игрока в мире.</p>
+  </div>
+
+  <p>Это меняет то, с чем сеть сравнивают. Пока мы студия &mdash; нас сравнивают со студиями, а их семь. С появлением автомата сеть попадает в вендинг: рынок, который <b>растёт на четверть в год</b> и остаётся ненасыщенным &mdash; 2&ndash;3 автомата на тысячу человек против 20&ndash;30 в Европе.</p>
+
+  <p>Автомат не отбирает клиентов у студий партнёров: в нём не сделать премиум-форматы, стекло и цифровые услуги. Ассортимент студии остаётся шире &mdash; автомат добирает тех, кто до студии не дошёл бы, и ставится там, куда студия не встанет.</p>
+</section>
+
+<section>
+  <h2>8. Что уже реализовано и что дальше</h2>
+
+  <p class="note">Первые два пункта собраны по предложенной концепции и работают сегодня.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n" style="color:var(--good)">✓</div>
+      <div class="step-b">
+        <div class="step-h">Анализ радужки &mdash; работает</div>
+        <div class="step-d">Из наработки в зачаточном виде собран рабочий сервис. Партнёр загружает снимок, за 30&ndash;60 секунд система выдаёт разбор: пигментация, структуры, иридологическое описание, готовые карточки для клиента. <a href="https://irido.cleernet.com/" style="color:var(--blue)">irido.cleernet.com</a></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n" style="color:var(--good)">✓</div>
+      <div class="step-b">
+        <div class="step-h">Автоматическая обработка снимков &mdash; работает</div>
+        <div class="step-d">Блики убираются, радужка обрезается и доводится автоматически. Тридцать секунд вместо часа в фотошопе и без обучения сотрудника.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">01</div>
+      <div class="step-b">
+        <div class="step-h">Личный кабинет партнёра &mdash; собрать</div>
+        <div class="step-d">Свести всё в одно окно: съёмка, обработка, разбор, заказ, печать, база снимков, статистика точки, единый прайс. Части готовы, нужна сборка.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <div class="step-b">
+        <div class="step-h">Кабинет клиента в Telegram</div>
+        <div class="step-d">У каждого посетителя свой раздел: его снимки, его разбор, его особенности. Человек возвращается к этому и показывает другим. Позже &mdash; подбор по схожести радужки и общение между пользователями.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <div class="step-b">
+        <div class="step-h">Кабинет сети</div>
+        <div class="step-d">Все точки на одном экране: оборот, съёмки, конверсия по каждой. Подсказки по продажам и сигналы при падении. Роялти считается от реального оборота.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <div class="step-b">
+        <div class="step-h">Автомат</div>
+        <div class="step-d">Отдельное направление: требует работы с оборудованием. Делается после того, как сеть партнёров начнёт приносить деньги.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  OCHEI CHARM &middot; концепция франшизы
+</footer>
+
+</div>
+</body>
+</html>
